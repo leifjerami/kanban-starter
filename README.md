@@ -4,6 +4,12 @@ A production-ready Trello-style kanban board for React + TypeScript + Tailwind C
 
 Built with [`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd) (Atlassian's `react-beautiful-dnd` fork — the same engine that powers Trello).
 
+![Kanban Light Mode](screenshots/kanban-light.png)
+*Light mode*
+
+![Kanban Dark Mode](screenshots/kanban-dark.png)
+*Dark mode*
+
 ---
 
 ## Why This Exists
