@@ -5,16 +5,13 @@ A production-ready Trello-style kanban board for React + TypeScript + Tailwind C
 Built with [`@hello-pangea/dnd`](https://github.com/hello-pangea/dnd) (Atlassian's `react-beautiful-dnd` fork — the same engine that powers Trello).
 
 ![Kanban Light Mode](screenshots/kanban-light.png)
-*Light mode*
-
-![Kanban Dark Mode](screenshots/kanban-dark.png)
-*Dark mode*
+_Light mode_
 
 ---
 
 ## Why This Exists
 
-You might be wondering: *"Why not just use a kanban library or copy Trello's setup?"*
+You might be wondering: _"Why not just use a kanban library or copy Trello's setup?"_
 
 Here's the thing — we tried that. We spent **hours** debugging drag-and-drop issues that every tutorial skips over:
 
@@ -28,16 +25,16 @@ This starter is the result of solving all those problems for real, in production
 
 `@hello-pangea/dnd` gives you the drag-and-drop engine. This starter gives you the **full kanban board**:
 
-| What you'd build yourself | What this gives you |
-|--------------------------|-------------------|
-| Drag-and-drop engine only | Full pipeline with columns, cards, reordering |
-| No data layer | API hook with optimistic updates |
-| No CRUD UI | Create/edit/delete modal with form validation |
-| Fixed card layout | Trello-style field visibility toggle |
-| Light mode only | Full dark mode support |
-| Plain text fields | Links/URLs system (LinkedIn, website, etc.) |
-| Activity log you build yourself | Activity timeline component |
-| Cards that offset from cursor | Cards that stick to your grab point |
+| What you'd build yourself       | What this gives you                           |
+| ------------------------------- | --------------------------------------------- |
+| Drag-and-drop engine only       | Full pipeline with columns, cards, reordering |
+| No data layer                   | API hook with optimistic updates              |
+| No CRUD UI                      | Create/edit/delete modal with form validation |
+| Fixed card layout               | Trello-style field visibility toggle          |
+| Light mode only                 | Full dark mode support                        |
+| Plain text fields               | Links/URLs system (LinkedIn, website, etc.)   |
+| Activity log you build yourself | Activity timeline component                   |
+| Cards that offset from cursor   | Cards that stick to your grab point           |
 
 ### Why not a library you install?
 
@@ -91,35 +88,35 @@ your-project/src/
 
 Find and replace these placeholders with your entity:
 
-| Placeholder | Example |
-|------------|---------|
-| `Item` (component names) | `Prospect`, `Task`, `Candidate` |
-| `item` (variable names) | `prospect`, `task`, `candidate` |
-| `Items` (display names) | `Prospects`, `Tasks`, `Candidates` |
-| Column statuses in `types.ts` | `New, Contacted, Negotiating, Won, Lost` |
-| Column colors in `ItemsPipeline.tsx` | `blue, sky, amber, lime, stone` |
-| API paths in `useItemsData.ts` | Your API endpoints |
-| Card fields in `CardFields.tsx` | Fields relevant to your entity |
+| Placeholder                          | Example                                  |
+| ------------------------------------ | ---------------------------------------- |
+| `Item` (component names)             | `Prospect`, `Task`, `Candidate`          |
+| `item` (variable names)              | `prospect`, `task`, `candidate`          |
+| `Items` (display names)              | `Prospects`, `Tasks`, `Candidates`       |
+| Column statuses in `types.ts`        | `New, Contacted, Negotiating, Won, Lost` |
+| Column colors in `ItemsPipeline.tsx` | `blue, sky, amber, lime, stone`          |
+| API paths in `useItemsData.ts`       | Your API endpoints                       |
+| Card fields in `CardFields.tsx`      | Fields relevant to your entity           |
 
 ### 4. Wire into your app
 
 ```tsx
 // App.tsx
-import { ItemsPipeline } from './pages/items/ItemsPipeline'
+import { ItemsPipeline } from "./pages/items/ItemsPipeline";
 
-<Route path="/items" element={<ItemsPipeline />} />
+<Route path="/items" element={<ItemsPipeline />} />;
 ```
 
 ### 5. Update your API
 
 Make sure your backend has these endpoints:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/items` | List all items |
-| POST | `/api/items` | Create item |
-| PUT | `/api/items/:id` | Update item |
-| DELETE | `/api/items/:id` | Delete item |
+| Method | Path             | Description    |
+| ------ | ---------------- | -------------- |
+| GET    | `/api/items`     | List all items |
+| POST   | `/api/items`     | Create item    |
+| PUT    | `/api/items/:id` | Update item    |
+| DELETE | `/api/items/:id` | Delete item    |
 
 ---
 
@@ -128,11 +125,13 @@ Make sure your backend has these endpoints:
 These are non-negotiable — violating them breaks drag-and-drop. We learned these the hard way:
 
 1. **No CSS transforms** on cards or any parent element
+
    - ❌ `hover:translate-y`, `scale-*`, `rotate-*`, `animate-*` with transform
    - ✅ `box-shadow` for hover effects, `border-color` transitions
    - **Why:** The library calculates cursor offset from DOM position. Transforms shift the visual without updating layout, causing offset.
 
 2. **No CSS gap, space-y, or child margins** for card/column spacing
+
    - ❌ `gap-4`, `space-y-2.5`
    - ❌ `margin-bottom` on a child wrapper inside Draggable
    - ✅ `margin-right` on column wrappers, `padding-bottom` on the Draggable container itself
@@ -140,6 +139,7 @@ These are non-negotiable — violating them breaks drag-and-drop. We learned the
    - **Why:** Flex gap uses internal margin calculations that confuse the library's positioning.
 
 3. **No overflow scroll** on droppable containers
+
    - ❌ `overflow-y-auto` on the Droppable div
    - ✅ `overflow: visible`
    - **Why:** Scroll offset gets added to the cursor position calculation.
@@ -185,17 +185,21 @@ The `useItemsData` hook follows the optimistic update pattern:
 // Update: change local state instantly, fire API in background
 const updateItem = async (id, updates) => {
   // 1. Optimistic update
-  setState(prev => ({ items: prev.items.map(i => i.id === id ? { ...i, ...updates } : i) }))
-  
+  setState((prev) => ({
+    items: prev.items.map((i) => (i.id === id ? { ...i, ...updates } : i)),
+  }));
+
   // 2. Fire API
   try {
-    await api.update(id, updates)
+    await api.update(id, updates);
     // No re-fetch! Local state is already correct.
   } catch {
     // Rollback on error
-    setState(prev => ({ items: prev.items.map(i => i.id === id ? original : i) }))
+    setState((prev) => ({
+      items: prev.items.map((i) => (i.id === id ? original : i)),
+    }));
   }
-}
+};
 ```
 
 ---
