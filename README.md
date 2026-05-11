@@ -126,9 +126,11 @@ These are non-negotiable — violating them breaks drag-and-drop. We learned the
    - ✅ `box-shadow` for hover effects, `border-color` transitions
    - **Why:** The library calculates cursor offset from DOM position. Transforms shift the visual without updating layout, causing offset.
 
-2. **No CSS gap or space-y** for card/column spacing
+2. **No CSS gap, space-y, or child margins** for card/column spacing
    - ❌ `gap-4`, `space-y-2.5`
-   - ✅ `margin-right` on column wrappers, `margin-bottom` on card wrappers
+   - ❌ `margin-bottom` on a child wrapper inside Draggable
+   - ✅ `margin-right` on column wrappers, `padding-bottom` on the Draggable container itself
+   - **Why:** `getBoundingClientRect()` includes element padding but NOT child margins. Placeholder mismatch causes drop snap.
    - **Why:** Flex gap uses internal margin calculations that confuse the library's positioning.
 
 3. **No overflow scroll** on droppable containers

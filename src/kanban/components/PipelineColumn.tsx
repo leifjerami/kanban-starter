@@ -65,10 +65,9 @@ export function PipelineColumn({ droppableId, label, color, items, totalValue, o
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     style={provided.draggableProps.style}
+                    className="pb-2.5"
                   >
-                    <div className="mb-2.5 last:mb-0">
-                      <ItemCard item={item} onClick={() => onCardClick(item)} isDragging={snapshot.isDragging} visibleFields={visibleFields} />
-                    </div>
+                    <ItemCard item={item} onClick={() => onCardClick(item)} isDragging={snapshot.isDragging} visibleFields={visibleFields} />
                   </div>
                 )}
               </Draggable>
